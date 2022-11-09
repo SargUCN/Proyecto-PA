@@ -1,7 +1,3 @@
-drop table if exists Person cascade;
-drop table if exists product cascade;
-drop table if exists reviews cascade;
-drop table if exists shopingCar cascade;
 
 create table Person(
 	rut text primary key,
