@@ -1,5 +1,5 @@
 package ClientScreen;
-
+import Dominio.*;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -17,7 +17,7 @@ import java.awt.Font;
 public class ClientScreen extends JFrame {
 
 	private JPanel contentPane;
-
+	private ConnectionDB connect;
 	/**
 	 * Launch the application.
 	 */
@@ -61,7 +61,7 @@ public class ClientScreen extends JFrame {
 		JButton exitButton = new JButton("Salir");
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login l = new Login();
+				Login l = new Login(connect);
 				l.setVisible(true);
 				ClientScreen.this.dispose();
 			}

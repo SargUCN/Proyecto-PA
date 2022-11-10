@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,22 +14,24 @@ import javax.swing.border.EmptyBorder;
 
 import AdminScreen.AdminScreen;
 import ClientScreen.ClientScreen;
+import Dominio.ConnectionDB;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.Image;
+import javax.swing.SwingConstants;
 
 public class Login extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTextField textField_1;
-	private Connection con;
-
+	private static ConnectionDB connect;
 	/**
 	 * Launch the application.
 	 * 
@@ -37,7 +41,7 @@ public class Login extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Login frame = new Login();
+					Login frame = new Login(connect);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +53,7 @@ public class Login extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Login() {
+	public Login(ConnectionDB connect) {
 		setTitle("Login");
 		setBounds(100, 100, 538, 351);
 		contentPane = new JPanel();
@@ -62,12 +66,13 @@ public class Login extends JFrame {
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("Usuario");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		lblNewLabel_1.setBounds(114, 25, 139, 25);
-		contentPane.add(lblNewLabel_1);
+		JLabel icon_User = new JLabel("Usuario");
+		icon_User.setHorizontalAlignment(SwingConstants.CENTER);
+		icon_User.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		icon_User.setBounds(114, 25, 139, 25);
+		contentPane.add(icon_User);
 		
-		JLabel lblNewLabel_1_1 = new JLabel("Contraseña");
+		JLabel lblNewLabel_1_1 = new JLabel("Contrasena");
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		lblNewLabel_1_1.setBounds(114, 99, 164, 29);
 		contentPane.add(lblNewLabel_1_1);
@@ -80,15 +85,38 @@ public class Login extends JFrame {
 		JButton login = new JButton("Login");
 		login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				//AdminScreen as = new AdminScreen();
-				//as.setVisible(true);
-				
-				ClientScreen cs = new ClientScreen();
-				cs.setVisible(true);
-				
-				Login.this.dispose();
+				ArrayList<String> l = null;
+				String rut = textField.getText();
+				String passwordPerson = textField_1.getText();
+				try {
+					l= connect.findUser("Select * from Person",rut,passwordPerson);
+					
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if(l.isEmpty()) {
+					JOptionPane.showMessageDialog(null,"Usuario no existente o datos erroneos");
+				}
+				else {
+					if(l.get(5).equals("t")) {
+						JOptionPane.showMessageDialog(null,"Usuario Bloqueado");
+					}
+					else if(l.get(5).equals("f") && l.get(9) == null) {
+						ClientScreen cs = new ClientScreen();
+						cs.setVisible(true);
+						Login.this.dispose();
+					}
+					else {
+						AdminScreen as = new AdminScreen();
+						as.setVisible(true);
+						Login.this.dispose();
+						
+					}
+				}		
 			}
+			
+			
 		});
 		login.setBounds(114, 188, 164, 38);
 		contentPane.add(login);
@@ -126,5 +154,6 @@ public class Login extends JFrame {
 		closeProgram.setBounds(441, 10, 73, 29);
 		contentPane.add(closeProgram);
 	}
+
 	
 }

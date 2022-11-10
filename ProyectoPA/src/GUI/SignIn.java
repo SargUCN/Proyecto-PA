@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import ClientScreen.ClientScreen;
+import Dominio.ConnectionDB;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -25,7 +26,7 @@ public class SignIn extends JFrame {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-
+	private ConnectionDB connect;
 	/**
 	 * Launch the application.
 	 */
@@ -88,7 +89,9 @@ public class SignIn extends JFrame {
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login l = new Login();
+				
+				//connect.insertData(rut,name,lastName,passwordPerson,mail,direction,phone);
+				Login l = new Login(connect);
 				l.setVisible(true);
 				SignIn.this.dispose();
 			}
@@ -129,7 +132,7 @@ public class SignIn extends JFrame {
 		JButton exitButton = new JButton("Salir");
 		exitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login l = new Login();
+				Login l = new Login(connect);
 				l.setVisible(true);
 				SignIn.this.dispose();
 			}

@@ -10,10 +10,11 @@ import Dominio.ConnectionDB;
 public class App {
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
-		
-		Login l = new Login();
+		ConnectionDB connect = new ConnectionDB();
+		connect.getConnection();
+		Login l = new Login(connect);
 		l.setVisible(true);
-
+		
 	}
 
 }
